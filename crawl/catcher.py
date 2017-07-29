@@ -28,7 +28,7 @@ class catcher:
         self.browser.visit(self.url)
         frame = self.browser.find_by_tag('frameset')[1].find_by_tag('frame')[1]
         print len(frame.find_by_tag('html'))
-        '''tmpitems = []
+        tmpitems = []
         for item in items:
             href = item.find_by_tag('a')
             tmpitems.append(href[0]['href'])
@@ -46,4 +46,4 @@ class catcher:
                     #print downloadurl
                     #print downloadurl
                     name = downloadurl.split('/')
-                    self.download(downloadurl, './data/Safety1/'+name[-1])'''
+                    self.download(downloadurl, './data/Safety1/'+name[-1])
