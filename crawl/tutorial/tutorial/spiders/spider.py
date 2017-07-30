@@ -2,7 +2,7 @@ import scrapy
 
 
 class ApiSpider(scrapy.Spider):
-    name = "api"
+    name = "javaapi"
     start_urls = ['https://docs.oracle.com/javase/8/docs/api/overview-summary.html']
     
     def parse(self, response):
@@ -30,7 +30,26 @@ class ApiSpider(scrapy.Spider):
 
     def parsePackage(self, response):
         types = response.css('table.typeSummary')
-        print response.css('h1.title::text').extract_first()
+        #print response.css('h1.title::text').extract_first()
         for t in types:
-            print t.css('caption span::text').extract_first()
+            typeName = t.css('caption span::text').extract_first()
+            rows = t.css('tr')[1:]
+            for r in rows:
+                cols = r.css('td')
+                my_class = cols[0].css('a::text').extract_first()
+                link = cols[0].css('a::attr(href)').extract_first()
+                descript = cols[1].css('div::text').extract_first()
+                yield response.follow(link, callback = self.parseClass)
 
+    def parseClass(self, response):
+        members = response.css('table.memberSummary')
+        #print response.css('h1.title::text').extract_first()
+        for m in members:
+            memberName = m.css('caption span::text').extract_first()
+            rows = m.css('tr')[1:]
+            for r in rows:
+                cols = r.css('td')
+                my_type = cols[0].css('code').extract()
+                name = cols[1].css('a::text').extract_first()
+                descript = cols[1].css('div::text').extract_first()
+                print 'info',my_type,'|', name, '|',descript
